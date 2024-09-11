@@ -63,21 +63,31 @@ body {
   }
   
   /* Animación diferente en cada sección interna */
-  .tacho {
+/* Tacho de basura */
+.tacho {
     width: 120px;
     height: 300px;
     border-radius: 15px;
+    
+    /* Fondo oscuro del tacho */
     background: #141414;
     margin: 0 auto 30px;
-    overflow: hidden;
-    position: relative;
+    
+    /* Sombra interna y externa para efecto de profundidad */
     box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.5), 0 0 20px rgba(0, 255, 0, 0.8);
+    
+    /* Rotación para voltear el tacho */
+    transform: rotateX(180deg); /* Voltea el tacho 180 grados en el eje X */
+    
+    /* Suaviza el crecimiento y la rotación al pasar el mouse */
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   }
   
+  /* Animación cuando el tacho se activa con hover */
   .tacho:hover {
-    transform: scale(1.1) rotate(5deg);
+    transform: scale(1.1) rotateX(180deg) rotate(5deg); /* Crece y rota */
   }
+  
   
   /* El nivel dentro del tacho */
   .nivel {
@@ -223,5 +233,10 @@ body {
     .table-section {
       grid-column: span 1;
     }
+    
+
+  
+
+
   }
   
