@@ -21,6 +21,7 @@
     <div class="analysis">
       <h2>Tiempo promedio de llenado</h2>
       <p id="averageFillTime">Promedio: -- segundos</p>
+      <p id="prediccionLlenado">Predicción de llenado: --</p>
     </div>
     <h2>Duración de los estados</h2>
     <table>
@@ -39,6 +40,7 @@
     const ws = new WebSocket('ws://localhost:3000');
     let estadoActual = '';
     let inicioEstado;
+    let tiemposEstados = [];
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
@@ -53,6 +55,8 @@
 
       actualizarTacho(data.estado);
       registrarEstado(data.estado, data.timestamp);
+      calcularPromedioLlenado();
+      hacerPrediccionLlenado(data.estado, data.distancia);
     };
 
     function actualizarTacho(estado) {
@@ -85,10 +89,57 @@
           const duracion = (finEstado - inicioEstado) / 1000;
           const row = `<tr><td>${estadoActual}</td><td>${timestamp}</td><td>${duracion.toFixed(2)} s</td></tr>`;
           document.getElementById('estadoTable').innerHTML += row;
+          tiemposEstados.push({ estado: estadoActual, duracion: duracion });
         }
         estadoActual = estado;
         inicioEstado = new Date();
       }
+    }
+
+    function calcularPromedioLlenado() {
+      if (tiemposEstados.length === 0) return;
+
+      const duraciones = tiemposEstados.filter(te => te.estado !== 'Vacio' && te.estado !== 'Lleno')
+                                        .map(te => te.duracion);
+      if (duraciones.length === 0) return;
+
+      const promedio = duraciones.reduce((a, b) => a + b, 0) / duraciones.length;
+      document.getElementById('averageFillTime').innerText = `Promedio: ${promedio.toFixed(2)} segundos`;
+    }
+
+    function hacerPrediccionLlenado(estado, distancia) {
+      let mensaje = '';
+      switch (estado) {
+        case 'Vacio':
+          mensaje = 'El tacho está vacío. Asegúrate de llenarlo pronto.';
+          break;
+        case 'Bajo':
+          mensaje = 'El tacho está bajo. Requiere llenado pronto.';
+          break;
+        case 'Medio':
+          mensaje = 'El tacho está medio lleno. Mantén el control.';
+          break;
+        case 'Alto':
+          mensaje = 'El tacho está casi lleno. Revisa pronto.';
+          break;
+        case 'Lleno':
+          mensaje = 'El tacho está lleno. Debe vaciarse.';
+          break;
+      }
+      
+      const tiempoLlenado = calcularTiempoLlenado(distancia);
+      if (tiempoLlenado) {
+        mensaje += ` Tiempo estimado para llenarse: ${tiempoLlenado} segundos.`;
+      }
+
+      document.getElementById('prediccionLlenado').innerText = mensaje;
+    }
+
+    function calcularTiempoLlenado(distancia) {
+      const umbral = 3; // Distancia mínima para considerarlo lleno
+      const tasaCambio = 5; // Ejemplo de tasa de cambio de nivel por segundo
+      if (distancia < umbral) return 'Inminente'; // Relleno en curso
+      return ((distancia - umbral) / tasaCambio).toFixed(2);
     }
   </script>
 </body>
