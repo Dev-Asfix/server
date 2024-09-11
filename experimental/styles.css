@@ -1,29 +1,65 @@
-/* Mantener el div principal sin efecto hover */
-.container {
+/* Fondo oscuro con efecto neón y transparencia */
+body {
+    background: radial-gradient(circle, rgba(2, 0, 36, 1) 0%, rgba(0, 0, 50, 1) 50%, rgba(0, 0, 0, 1) 100%);
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  
+  /* Contenedor principal */
+  .container {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 30px;
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    padding: 20px;
+    backdrop-filter: blur(20px);
+    padding: 30px;
     border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.5);
     max-width: 1200px;
     width: 100%;
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
+  
+  /* Fondo animado del contenedor */
+  .container:before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(60deg, rgba(0, 255, 255, 0.5), rgba(0, 0, 255, 0.3));
+    filter: blur(50px);
+    opacity: 0.6;
+    animation: backgroundAnimation 10s infinite linear;
+    z-index: -1;
+  }
+  
+  @keyframes backgroundAnimation {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(50%, 50%); }
+    100% { transform: translate(0, 0); }
   }
   
   /* SECCION IZQUIERDA - Tacho y Estado */
   .left-section {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     padding: 20px;
     border-radius: 15px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 255, 255, 0.2);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    position: relative;
   }
   
   /* Animación diferente en cada sección interna */
@@ -31,61 +67,76 @@
     width: 120px;
     height: 300px;
     border-radius: 15px;
-    background: linear-gradient(145deg, #414141, #2b2b2b);
-    box-shadow: 10px 10px 20px #1e1e1e, -10px -10px 20px #444444;
+    background: #141414;
     margin: 0 auto 30px;
     overflow: hidden;
     position: relative;
-    perspective: 1000px;
-    transition: transform 0.3s ease-in-out;
+    box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.5), 0 0 20px rgba(0, 255, 0, 0.8);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   }
   
   .tacho:hover {
     transform: scale(1.1) rotate(5deg);
   }
   
+  /* El nivel dentro del tacho */
   .nivel {
     width: 100%;
     height: 0;
-    background: rgba(0, 255, 0, 0.7);
-    box-shadow: 0 0 15px rgba(0, 255, 0, 0.9), inset 0 0 10px rgba(0, 255, 0, 0.6);
-    transition: height 0.5s ease-in-out;
-    animation: fillAnimation 2s ease-out;
+    background: rgba(0, 255, 0, 0.8);
+    transition: height 0.5s ease-in-out, background 0.5s ease-in-out;
   }
   
   .info {
     margin-top: 20px;
     text-align: left;
-    transition: all 0.3s ease-in-out;
   }
   
-  .info p {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
-    background: rgba(255, 255, 255, 0.1);
+  /* Estado y Distancia - Efecto neon y animaciones cuando cambian */
+  #estado, #distancia {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
     padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
   }
   
-  .info p:hover {
-    transform: scale(1.05);
-    box-shadow: 0 10px 25px rgba(0, 255, 255, 0.7);
+  #estado.changed, #distancia.changed {
+    animation: highlightChange 0.6s ease-in-out;
   }
   
+  @keyframes highlightChange {
+    0% {
+      transform: scale(1.2);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 1), 0 0 60px rgba(0, 255, 255, 0.5);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+  }
+  
+  /* Efecto de parpadeo para alertas */
   .alerta {
     color: #ff4d4d;
-    text-shadow: 0 0 5px rgba(255, 0, 0, 0.8);
+    text-shadow: 0 0 5px rgba(255, 0, 0, 1);
+    animation: blinkAlert 1s infinite;
   }
   
-  /* SECCION DERECHA - Análisis y Recomendaciones */
+  @keyframes blinkAlert {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  
+  /* SECCION DERECHA - Análisis y Recomendaciones futurista */
   .right-section {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     padding: 20px;
     border-radius: 15px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 32px rgba(255, 0, 255, 0.2);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -105,10 +156,26 @@
     transition: all 0.3s ease-in-out;
   }
   
-  /* Efecto hover en la sección de análisis */
+  /* Efecto hover en los párrafos de análisis */
   .analysis p:hover {
-    transform: rotate(3deg) scale(1.03);
-    box-shadow: 0 5px 25px rgba(0, 255, 200, 0.7);
+    transform: rotate(3deg) scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 255, 200, 0.7);
+  }
+  
+  /* IA - Mensajes de Recomendaciones casuales */
+  #mensajeRecomendacion {
+    font-style: italic;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
+    color: #00ffcc;
+    animation: appearMessage 0.5s ease-in-out;
+  }
+  
+  @keyframes appearMessage {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   
   /* TABLA - Sección inferior, ocupa el ancho completo */
@@ -140,33 +207,11 @@
     transition: transform 0.3s ease-in-out;
   }
   
-  /* Efecto hover en cada celda de la tabla */
+  /* Efecto hover en las celdas de la tabla */
   td:hover {
     transform: translateY(-5px);
     background-color: rgba(0, 255, 255, 0.1);
     box-shadow: 0 5px 20px rgba(0, 255, 255, 0.5);
-  }
-  
-  /* ANIMACIONES Y TRANSICIONES */
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-      transform: translateY(-50px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* Animación del tacho */
-  @keyframes fillAnimation {
-    0% {
-      height: 0;
-    }
-    100% {
-      height: 100%;
-    }
   }
   
   /* Adaptación para móviles */
