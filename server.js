@@ -18,7 +18,7 @@ wss.on('connection', ws => {
     lastData = { ...data, timestamp: new Date().toLocaleString() };
     
     if (data.estado === 'Lleno') {
-      fullTimes.push(data.timestamp);
+      fullTimes.push(data.now());
       calculateAverageFillTime();
     }
 
@@ -31,10 +31,17 @@ wss.on('connection', ws => {
   });
 });
 
+ws.onclose = () => {
+  setTimeout(() => {
+    ws = new WebSocket('ws://localhost:3000');
+  }, 5000); // Intentar reconectar cada 5 segundos
+};
+
+
 function calculateAverageFillTime() {
   if (fullTimes.length >= 2) {
     const totalFillTime = fullTimes[fullTimes.length - 1] - fullTimes[0];
-    averageFillTime = totalFillTime / (fullTimes.length - 1);
+    averageFillTime = totalFillTime / (fullTimes.length - 1)/1000;
   }
 }
 

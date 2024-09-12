@@ -26,6 +26,10 @@
       <!-- Sección Derecha: Análisis y Recomendaciones -->
       <div class="right-section">
         <h2>Tiempo promedio de llenado</h2>
+        <div class="audio-container" id="audioContainer">
+          <div class="audio-icon"></div>
+          <audio id="audioPlayer" controls></audio>
+      </div>
         <div class="analysis">
           <p id="averageFillTime">Promedio: -- segundos</p>
           <p id="prediccionLlenado">Predicción de llenado: --</p>
@@ -50,11 +54,24 @@
   
     </div>
 
+  
+   
+
   <script>
     const ws = new WebSocket('ws://localhost:3000');
     let estadoActual = '';
     let inicioEstado;
     let tiemposEstados = [];
+    let audioIndex = 0;
+    let audioPlaying = false;
+
+    const audios = [
+            'audios/audio1.mp3',
+            'audios/audio2.mp3',
+            'audios/audio3.mp3',
+            'audios/audio4.mp3',
+            'audios/audio5.mp3'
+        ];
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
@@ -72,6 +89,13 @@
       calcularPromedioLlenado();
       hacerPrediccionLlenado(data.estado, data.distancia);
       mostrarRecomendacion(data.averageFillTime);
+
+      // Reproducir o detener audio si el estado es "Lleno"
+      if (data.estado === 'Lleno' && !audioPlaying) {
+                reproducirAudiosSecuenciales();
+            } else if (data.estado !== 'Lleno' && audioPlaying) {
+                detenerAudio();
+            }
     };
 
     function actualizarTacho(estado) {
@@ -213,6 +237,77 @@
       const index = Math.floor(Math.random() * recommendations.length);
       return recommendations[index];
     }
+
+    // Función para reproducir audios secuenciales mientras el estado es "Lleno"
+
+function reproducirAudiosSecuenciales() {
+    const audioPlayer = document.getElementById('audioPlayer');
+
+    // Solo reproducir el audio si no está ya reproduciéndose
+    if (!audioPlaying) {
+        audioPlaying = true;
+        audioContainer.classList.add('playing');
+        audioContainer.classList.remove('stopped');
+        audioPlayer.src = audios[audioIndex];
+        audioPlayer.play();
+
+        audioPlayer.onended = () => {
+            // Cuando termina el audio, verificar si el estado sigue siendo 'Lleno'
+            if (estadoActual === 'Lleno') {
+                // Aumentar el índice o reiniciar si es el último audio
+                audioIndex = (audioIndex + 1) % audios.length;
+                audioPlayer.src = audios[audioIndex];
+                audioPlayer.play();
+            } else {
+                detenerAudio(); // Detener si el estado cambia
+            }
+        };
+
+        audioPlayer.onerror = () => {
+            console.error("Error al reproducir el audio.");
+            detenerAudio();
+        };
+    }
+    document.addEventListener('click', () => {
+    audioPlayer.play();
+});
+
+}
+
+// Función para detener el audio si el estado cambia
+function detenerAudio() {
+    const audioPlayer = document.getElementById('audioPlayer');
+    audioPlayer.pause();
+    audioPlayer.currentTime = 0; // Reiniciar el tiempo del audio
+    audioPlaying = false;
+    audioContainer.classList.remove('playing');
+    audioContainer.classList.add('stopped');
+}
+
+// Función que verifica el estado del sensor
+function verificarEstadoDelSensor() {
+    if (sensorDetectaLleno()) {
+        if (estadoActual !== 'Lleno') {
+            estadoActual = 'Lleno';
+            reproducirAudiosSecuenciales(); // Reproduce el audio solo cuando cambia a "Lleno"
+        }
+    } else {
+        if (estadoActual === 'Lleno') {
+            estadoActual = 'Vacio'; // O cualquier otro estado que definas
+            detenerAudio(); // Detener el audio si ya no está "Lleno"
+        }
+    }
+}
+
+// Simular función de detección del sensor
+function sensorDetectaLleno() {
+    // Aquí va tu lógica para detectar si el tacho está lleno
+    // Deberías retornar true si el sensor detecta que está en el rango de lleno
+    return Math.random() > 0.5; // Simulación (50% de probabilidad de estar lleno)
+}
+
+
+
   </script>
 </body>
 </html>
