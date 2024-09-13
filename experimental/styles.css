@@ -11,9 +11,6 @@ body {
   }
   
   /* Contenedor principal */
-<<<<<<< HEAD
-  .container {
-=======
   .container-principal{
     display: flex;
     justify-content: space-between; /* Distribuye los divs a la izquierda y derecha */
@@ -27,7 +24,6 @@ body {
   
   .left-section {
 
->>>>>>> bf5751f (Version  Nueva)
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 30px;
@@ -37,11 +33,7 @@ body {
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(31, 38, 135, 0.5);
     max-width: 1200px;
-<<<<<<< HEAD
-    width: 100%;
-=======
     width: 35%;
->>>>>>> bf5751f (Version  Nueva)
     border: 1px solid rgba(255, 255, 255, 0.3);
     position: relative;
     z-index: 1;
@@ -49,11 +41,7 @@ body {
   }
   
   /* Fondo animado del contenedor */
-<<<<<<< HEAD
-  .container:before {
-=======
   .left-section:before {
->>>>>>> bf5751f (Version  Nueva)
     content: '';
     position: absolute;
     top: -50%;
@@ -81,12 +69,6 @@ body {
     border-radius: 15px;
     box-shadow: 0 8px 32px rgba(0, 255, 255, 0.2);
     display: flex;
-<<<<<<< HEAD
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
-  }
-=======
     display: flex;
     flex-direction: column; /* Apila elementos verticalmente */
     align-items: center; /* Centra horizontalmente */
@@ -199,7 +181,6 @@ body {
 }
 
 
->>>>>>> bf5751f (Version  Nueva)
   
   /* Animación diferente en cada sección interna */
 /* Tacho de basura */
@@ -289,12 +270,6 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-<<<<<<< HEAD
-  }
-  
-  .analysis {
-    margin-bottom: 20px;
-=======
     width: 60%;
   }
 
@@ -346,17 +321,12 @@ body {
   
   .analysis {
     margin-bottom: 1px;
->>>>>>> bf5751f (Version  Nueva)
   }
   
   .analysis p {
     font-size: 1.1rem;
     margin-bottom: 10px;
-<<<<<<< HEAD
-    background: rgba(255, 255, 255, 0.1);
-=======
    
->>>>>>> bf5751f (Version  Nueva)
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -370,19 +340,7 @@ body {
   }
   
   /* IA - Mensajes de Recomendaciones casuales */
-<<<<<<< HEAD
-  #mensajeRecomendacion {
-    font-style: italic;
-    background: rgba(0, 0, 0, 0.4);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
-    color: #00ffcc;
-    animation: appearMessage 0.5s ease-in-out;
-  }
-=======
  
->>>>>>> bf5751f (Version  Nueva)
   
   @keyframes appearMessage {
     from { opacity: 0; transform: translateY(10px); }
@@ -392,24 +350,16 @@ body {
   /* TABLA - Sección inferior, ocupa el ancho completo */
   .table-section {
     grid-column: span 2;
-<<<<<<< HEAD
-    margin-top: 20px;
-=======
     margin-top: 0px;
 
     max-height: 200px;
     overflow-y : scroll;
     overflow-x:hidden ;
->>>>>>> bf5751f (Version  Nueva)
   }
   
   table {
     width: 100%;
-<<<<<<< HEAD
-    margin-top: 20px;
-=======
     margin-top: 5px;
->>>>>>> bf5751f (Version  Nueva)
     border-collapse: collapse;
     backdrop-filter: blur(8px);
   }
@@ -437,87 +387,6 @@ body {
     box-shadow: 0 5px 20px rgba(0, 255, 255, 0.5);
   }
   
-<<<<<<< HEAD
-/* Estilos generales del reproductor de audio */
-#audioPlayer {
-  display: none; /* Oculta el reproductor de audio por defecto */
-}
-
-/* Contenedor del reproductor con animaciones */
-.audio-container {
-  position: center;
-  bottom: 20px;
-  right: 20px;
-  width: 100px;
-  height: 100px;
-  background: #282c34;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-/* Animación cuando se reproduce el audio */
-.audio-container.playing {
-  background: #1e90ff; /* Color de fondo cuando está reproduciendo */
-  transform: scale(1.2); /* Escalar el contenedor */
-}
-
-.audio-container.playing::before {
-  content: '';
-  position: absolute;
-  width: 120%;
-  height: 120%;
-  border-radius: 50%;
-  background: rgba(30, 144, 255, 0.5); /* Efecto de brillo azul */
-  animation: pulse 1.5s infinite; /* Animación de pulso */
-}
-
-/* Animación de pulso */
-@keyframes pulse {
-  0% {
-      transform: scale(1);
-      opacity: 0.5;
-  }
-  50% {
-      transform: scale(1.5);
-      opacity: 0.2;
-  }
-  100% {
-      transform: scale(1);
-      opacity: 0.5;
-  }
-}
-
-/* Icono de audio */
-.audio-icon {
-  font-size: 2rem;
-  color: #fff;
-  transition: transform 0.3s ease;
-}
-
-/* Animación cuando el audio se detiene */
-.audio-container.stopped {
-  background: #282c34; /* Color de fondo cuando no está reproduciendo */
-  transform: scale(1); /* Normalizar escala */
-}
-
-.audio-container.stopped .audio-icon {
-  transform: rotate(0deg); /* Icono en reposo */
-}
-
-/* Icono de reproducción */
-.audio-icon::before {
-  content: '▶'; /* Icono de reproducción */
-}
-
-.audio-container.playing .audio-icon::before {
-  content: '⏸'; /* Icono de pausa */
-}
-=======
 
 
 
@@ -600,7 +469,6 @@ body {
   100% { opacity: 0.8; }
 }
 
->>>>>>> bf5751f (Version  Nueva)
 
 
   

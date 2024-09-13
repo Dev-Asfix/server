@@ -7,57 +7,6 @@
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-<<<<<<< HEAD
-    <div class="container">
-      
-      <!-- Sección Izquierda: Tacho y Estado -->
-      <div class="left-section">
-        <h2>Monitoreo del Tacho</h2>
-        <div class="tacho">
-          <div id="nivel" class="nivel"></div>
-        </div>
-        <div class="info">
-          <p id="estado">Estado: --</p>
-          <p id="distancia">Distancia: -- cm</p>
-          <p id="fecha">Fecha y Hora: --</p>
-          <p id="alerta" class="alerta"></p>
-        </div>
-      </div>
-      
-      <!-- Sección Derecha: Análisis y Recomendaciones -->
-      <div class="right-section">
-        <h2>Tiempo promedio de llenado</h2>
-        <div class="audio-container" id="audioContainer">
-          <div class="audio-icon"></div>
-          <audio id="audioPlayer" controls></audio>
-      </div>
-        <div class="analysis">
-          <p id="averageFillTime">Promedio: -- segundos</p>
-          <p id="prediccionLlenado">Predicción de llenado: --</p>
-          <p id="mensajeRecomendacion">Recomendación: --</p>
-        </div>
-      </div>
-      
-      <!-- Sección Tabla: Duración de los estados -->
-      <div class="table-section">
-        <h2>Duración de los estados</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Estado</th>
-              <th>Fecha</th>
-              <th>Duración</th>
-            </tr>
-          </thead>
-          <tbody id="estadoTable"></tbody>
-        </table>
-      </div>
-  
-    </div>
-
-  
-   
-=======
     
     
     <div class="container-principal">
@@ -124,7 +73,6 @@
       </div>
     </div>
     
->>>>>>> bf5751f (Version  Nueva)
 
   <script>
     const ws = new WebSocket('ws://localhost:3000');
