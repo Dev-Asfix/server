@@ -181,41 +181,98 @@ body {
 }
 
 
-  
-  /* Animación diferente en cada sección interna */
-/* Tacho de basura */
+ /* Tacho de basura */
 .tacho {
-    width: 120px;
-    height: 300px;
-    border-radius: 15px;
-    
-    /* Fondo oscuro del tacho */
-    background: #141414;
-    margin: 0 auto 30px;
-    
-    /* Sombra interna y externa para efecto de profundidad */
-    box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.5), 0 0 20px rgba(0, 255, 0, 0.8);
-    
-    /* Rotación para voltear el tacho */
-    transform: rotateX(180deg); /* Voltea el tacho 180 grados en el eje X */
-    
-    /* Suaviza el crecimiento y la rotación al pasar el mouse */
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  width: 120px;
+  height: 300px;
+  border-radius: 15px;
+  background: #141414;
+  margin: 0 auto 30px;
+  box-shadow: inset 0 0 40px rgba(0, 255, 255, 0.3), 0 0 40px rgba(0, 255, 255, 0.5);
+  transform: rotateX(180deg);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden; /* Para que el contenido no se desborde */
+}
+
+/* Animación cuando el tacho se activa con hover */
+.tacho:hover {
+  transform: scale(1.1) rotateX(180deg) rotate(5deg);
+  box-shadow: inset 0 0 60px rgba(0, 255, 255, 0.5), 0 0 60px rgba(0, 255, 255, 0.8);
+}
+
+/* El nivel dentro del tacho */
+.nivel {
+  width: 100%;
+  height: 0;
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.6), rgba(0, 150, 255, 0.8));
+  position: absolute;
+  bottom: 0;
+  transition: height 0.7s ease-in-out, background 0.7s ease-in-out;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+  overflow: hidden;
+}
+
+/* Burbujeo dentro del nivel */
+.nivel::before {
+  content: "";
+  position: absolute;
+  width: 150%;
+  height: 200%;
+  top: -150%;
+  left: -25%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent);
+  animation: burbujeo 4s infinite ease-in-out;
+  filter: blur(10px);
+  opacity: 0.6;
+}
+
+/* Efecto de calor mezclado con frío */
+.nivel::after {
+  content: "";
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  background: radial-gradient(circle at center, rgba(0, 255, 255, 0.6), rgba(0, 150, 255, 0.3), transparent);
+  top: -50%;
+  left: -25%;
+  animation: lava 3s infinite linear;
+  filter: blur(15px);
+  opacity: 0.8;
+}
+
+/* Crecimiento de nivel */
+.tacho:hover .nivel {
+  height: 80%; /* Simula que se llena el tacho */
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.8), rgba(0, 150, 255, 1));
+}
+
+/* Animación de burbujeo */
+@keyframes burbujeo {
+  0% {
+      transform: translateY(0) scale(1);
   }
-  
-  /* Animación cuando el tacho se activa con hover */
-  .tacho:hover {
-    transform: scale(1.1) rotateX(180deg) rotate(5deg); /* Crece y rota */
+  50% {
+      transform: translateY(-100%) scale(1.2);
   }
-  
-  
-  /* El nivel dentro del tacho */
-  .nivel {
-    width: 100%;
-    height: 0;
-    background: rgba(0, 255, 0, 0.8);
-    transition: height 0.5s ease-in-out, background 0.5s ease-in-out;
+  100% {
+      transform: translateY(0) scale(1);
   }
+}
+
+/* Animación de lava (mezcla de calor y frío) */
+@keyframes lava {
+  0% {
+      transform: translateY(0) scale(1);
+  }
+  50% {
+      transform: translateY(-80%) scale(1.3);
+  }
+  100% {
+      transform: translateY(0) scale(1);
+  }
+}
+
   
   .info {
     margin-top: 20px;
