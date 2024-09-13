@@ -59,16 +59,19 @@
         <!-- Tabla -->
         <div class="table-section">
           <h2>Duración de los estados</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Estado</th>
-                <th>Fecha</th>
-                <th>Duración</th>
-              </tr>
-            </thead>
-            <tbody id="estadoTable"></tbody>
-          </table>
+          <div class="tablita">
+            <table>
+              <thead>
+                <tr>
+                  <th>Estado</th>
+                  <th>Fecha</th>
+                  <th>Duración</th>
+                </tr>
+              </thead>
+              <tbody id="estadoTable"></tbody>
+            </table>
+          </div>
+          
         </div>
       </div>
     </div>
@@ -257,22 +260,25 @@
 
     // Función para reproducir audios secuenciales mientras el estado es "Lleno"
 
-function reproducirAudiosSecuenciales() {
+    function reproducirAudiosSecuenciales() {
     const audioPlayer = document.getElementById('audioPlayer');
 
     // Solo reproducir el audio si no está ya reproduciéndose
     if (!audioPlaying) {
         audioPlaying = true;
-        audioContainer.classList.add('playing');
-        audioContainer.classList.remove('stopped');
+
+        // Seleccionar un audio aleatorio al inicio
+        audioIndex = Math.floor(Math.random() * audios.length); // Aleatorio al iniciar
+
         audioPlayer.src = audios[audioIndex];
         audioPlayer.play();
 
         audioPlayer.onended = () => {
             // Cuando termina el audio, verificar si el estado sigue siendo 'Lleno'
             if (estadoActual === 'Lleno') {
-                // Aumentar el índice o reiniciar si es el último audio
-                audioIndex = (audioIndex + 1) % audios.length;
+                // Seleccionar otro audio aleatorio
+                audioIndex = Math.floor(Math.random() * audios.length); // Aleatorio cada vez
+
                 audioPlayer.src = audios[audioIndex];
                 audioPlayer.play();
             } else {
@@ -285,10 +291,6 @@ function reproducirAudiosSecuenciales() {
             detenerAudio();
         };
     }
-    document.addEventListener('click', () => {
-    audioPlayer.play();
-});
-
 }
 
 // Función para detener el audio si el estado cambia

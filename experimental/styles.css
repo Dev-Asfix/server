@@ -352,11 +352,15 @@ body {
     grid-column: span 2;
     margin-top: 0px;
 
-    max-height: 200px;
-    overflow-y : scroll;
-    overflow-x:hidden ;
+   
   }
   
+.tablita{
+  max-height: 150px;
+    overflow-y : scroll;
+    overflow-x:hidden ;
+}
+
   table {
     width: 100%;
     margin-top: 5px;
