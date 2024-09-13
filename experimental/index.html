@@ -86,11 +86,34 @@
     let audioPlaying = false;
 
     const audios = [
-            'audios/audio1.mp3',
-            'audios/audio2.mp3',
-            'audios/audio3.mp3',
-            'audios/audio4.mp3',
-            'audios/audio5.mp3'
+    'audios/audio1.mp3',
+'audios/audio2.mp3',
+'audios/audio3.mp3',
+'audios/audio4.mp3',
+'audios/audio5.mp3',
+'audios/audio6.mp3',
+'audios/audio7.mp3',
+'audios/audio8.mp3',
+'audios/audio9.mp3',
+'audios/audio10.mp3',
+'audios/audio11.mp3',
+'audios/audio12.mp3',
+'audios/audio13.mp3',
+'audios/audio14.mp3',
+'audios/audio15.mp3',
+'audios/audio16.mp3',
+'audios/audio17.mp3',
+'audios/audio18.mp3',
+'audios/audio19.mp3',
+'audios/audio20.mp3',
+'audios/audio21.mp3',
+'audios/audio22.mp3',
+'audios/audio23.mp3',
+'audios/audio24.mp3',
+'audios/audio25.mp3',
+'audios/audio26.mp3',
+'audios/audio27.mp3',
+'audios/audio28.mp3'
         ];
 
     ws.onmessage = (event) => {
@@ -208,42 +231,42 @@
       if (!isNaN(promedioNum)) {
         if (promedioNum < 10) {
           mensaje = getRandomRecommendation([
-          'El tacho tiene un tiempo de llenado moderado, onichan. Ajusta tu planificación según sea necesario.',
-'Onichan, el tiempo de llenado es aceptable. Considera realizar un monitoreo periódico.',
-'El llenado es estable, onichan. Mantén el sistema bajo observación para evitar sorpresas.',
-'Onichan, parece que el tacho se está llenando rápidamente. Planifica vaciados más frecuentes.',
-'El tiempo de llenado es un poco corto, onichan. ¡Recuerda vigilarlo de cerca!',
-'Onichan, el tacho se llena lentamente. Podrías aprovechar para revisar si todo está funcionando bien.',
-'Tiempo de llenado prolongado, onichan. Quizás sea buena idea revisar el sistema.',
-'Onichan, el tacho se llena en poco tiempo. Mantén la vigilancia constante y ajusta tus tiempos.',
-'El tacho parece tener un llenado más lento de lo normal, onichan. Revisa si hay problemas en el proceso.',
-'Onichan, ¡el tacho se llena con estabilidad! Mantén la observación periódica para asegurar un buen funcionamiento.'
+          'El tiempo de llenado es moderado. Ajusta la planificación si es necesario.',
+  'El tiempo de llenado es aceptable. Considera un monitoreo periódico.',
+  'El llenado es estable. Mantén el sistema bajo observación.',
+  'El tacho se está llenando rápidamente. Planifica vaciados frecuentes.',
+  'El tiempo de llenado es corto. Vigílalo de cerca.',
+  'El tacho se llena lentamente. Revisa que todo funcione bien.',
+  'El llenado es prolongado. Considera revisar el sistema.',
+  'El tacho se llena en poco tiempo. Ajusta los tiempos de vigilancia.',
+  'El llenado parece más lento de lo normal. Revisa el proceso.',
+  'El llenado es estable. Mantén una observación periódica.'
           ]);
         } else if (promedioNum < 20) {
           mensaje = getRandomRecommendation([
-          'El tacho tiene un tiempo de llenado moderado, onichan. Ajusta tu planificación según sea necesario.',
-'Onichan, el tiempo de llenado es aceptable. Considera realizar un monitoreo periódico.',
-'El llenado es estable, onichan. Mantén el sistema bajo observación para evitar sorpresas.',
-'Onichan, parece que el tacho se está llenando rápidamente. Planifica vaciados más frecuentes.',
-'El tiempo de llenado es un poco corto, onichan. ¡Recuerda vigilarlo de cerca!',
-'Onichan, el tacho se llena lentamente. Podrías aprovechar para revisar si todo está funcionando bien.',
-'Tiempo de llenado prolongado, onichan. Quizás sea buena idea revisar el sistema.',
-'Onichan, el tacho se llena en poco tiempo. Mantén la vigilancia constante y ajusta tus tiempos.',
-'El tacho parece tener un llenado más lento de lo normal, onichan. Revisa si hay problemas en el proceso.',
-'Onichan, ¡el tacho se llena con estabilidad! Mantén la observación periódica para asegurar un buen funcionamiento.'
+          'El tiempo de llenado es moderado. Ajusta la planificación si es necesario.',
+    'El tiempo de llenado es aceptable. Considera un monitoreo periódico.',
+    'El llenado es estable. Mantén el sistema bajo observación.',
+    'El tacho se está llenando rápidamente. Planifica vaciados frecuentes.',
+    'El tiempo de llenado es corto. Vigílalo de cerca.',
+    'El tacho se llena lentamente. Revisa que todo funcione bien.',
+    'El llenado es prolongado. Considera revisar el sistema.',
+    'El tacho se llena en poco tiempo. Ajusta los tiempos de vigilancia.',
+    'El llenado parece más lento de lo normal. Revisa el proceso.',
+    'El llenado es estable. Mantén una observación periódica.'
           ]);
         } else {
           mensaje = getRandomRecommendation([
-          'El tacho tiene un tiempo de llenado moderado, onichan. Ajusta tu planificación según sea necesario.',
-'Onichan, el tiempo de llenado es aceptable. Considera realizar un monitoreo periódico.',
-'El llenado es estable, onichan. Mantén el sistema bajo observación para evitar sorpresas.',
-'Onichan, parece que el tacho se está llenando rápidamente. Planifica vaciados más frecuentes.',
-'El tiempo de llenado es un poco corto, onichan. ¡Recuerda vigilarlo de cerca!',
-'Onichan, el tacho se llena lentamente. Podrías aprovechar para revisar si todo está funcionando bien.',
-'Tiempo de llenado prolongado, onichan. Quizás sea buena idea revisar el sistema.',
-'Onichan, el tacho se llena en poco tiempo. Mantén la vigilancia constante y ajusta tus tiempos.',
-'El tacho parece tener un llenado más lento de lo normal, onichan. Revisa si hay problemas en el proceso.',
-'Onichan, ¡el tacho se llena con estabilidad! Mantén la observación periódica para asegurar un buen funcionamiento.'
+          'El tiempo de llenado es moderado. Ajusta la planificación si es necesario.',
+    'El tiempo de llenado es aceptable. Considera un monitoreo periódico.',
+    'El llenado es estable. Mantén el sistema bajo observación.',
+    'El tacho se está llenando rápidamente. Planifica vaciados frecuentes.',
+    'El tiempo de llenado es corto. Vigílalo de cerca.',
+    'El tacho se llena lentamente. Revisa que todo funcione bien.',
+    'El llenado es prolongado. Considera revisar el sistema.',
+    'El tacho se llena en poco tiempo. Ajusta los tiempos de vigilancia.',
+    'El llenado parece más lento de lo normal. Revisa el proceso.',
+    'El llenado es estable. Mantén una observación periódica.'
           ]);
         }
       } else {
@@ -279,7 +302,7 @@
             // Cuando termina el audio, verificar si el estado sigue siendo 'Lleno'
             if (estadoActual === 'Lleno') {
                 // Seleccionar otro audio aleatorio
-                audioIndex = Math.floor(Math.random() * audios.length); // Aleatorio cada vez
+                audioIndex = (audioIndex + 1) % audios.length; // Aleatorio cada vez
 
                 audioPlayer.src = audios[audioIndex];
                 audioPlayer.play();
