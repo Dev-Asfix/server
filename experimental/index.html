@@ -12,7 +12,7 @@
     <div class="container-principal">
       <div class="left-section">
         <!-- Contenido de la sección izquierda -->
-        <h2>Monitoreo del Tacho</h2>
+        <h2 id="h2e">Monitoreo del Tacho</h2>
         <div class="content">
           <!-- Tacho a la izquierda -->
           <div class="tacho">
@@ -262,6 +262,7 @@
 
     function reproducirAudiosSecuenciales() {
     const audioPlayer = document.getElementById('audioPlayer');
+    const audioContainer = document.getElementById('audioContainer');
 
     // Solo reproducir el audio si no está ya reproduciéndose
     if (!audioPlaying) {
@@ -272,6 +273,7 @@
 
         audioPlayer.src = audios[audioIndex];
         audioPlayer.play();
+        audioContainer.classList.add('playing');
 
         audioPlayer.onended = () => {
             // Cuando termina el audio, verificar si el estado sigue siendo 'Lleno'
@@ -296,6 +298,7 @@
 // Función para detener el audio si el estado cambia
 function detenerAudio() {
     const audioPlayer = document.getElementById('audioPlayer');
+    const audioContainer = document.getElementById('audioContainer');
     audioPlayer.pause();
     audioPlayer.currentTime = 0; // Reiniciar el tiempo del audio
     audioPlaying = false;

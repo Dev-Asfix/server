@@ -8,6 +8,7 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
+    
   }
   
   /* Contenedor principal */
@@ -43,7 +44,7 @@ body {
   /* Fondo animado del contenedor */
   .left-section:before {
     content: '';
-    position: absolute;
+    position: fixed;
     top: -50%;
     left: -50%;
     width: 200%;
@@ -53,6 +54,9 @@ body {
     opacity: 0.6;
     animation: backgroundAnimation 10s infinite linear;
     z-index: -1;
+    flex-direction: row; /* Apila los elementos verticalmente */
+  align-items: center; /* Centra horizontalmente */
+  justify-content: flex-start; /* Mantiene el título arriba */
   }
   
   @keyframes backgroundAnimation {
@@ -84,7 +88,7 @@ body {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  gap: 5vh;
+  gap: 4vh;
  }
  .tacho, .info {
     flex: 1; /* Ambos elementos ocupan el mismo espacio horizontalmente */
@@ -105,80 +109,103 @@ body {
   display: none; /* Oculta el reproductor de audio por defecto */
 }
 
-/* Contenedor del reproductor con animaciones */
+/* Asegúrate de ajustar la ruta según tu estructura de directorios */
 .audio-container {
   position: center;
-  bottom: 20px;
-  right: 20px;
-  width: 100px;
-  height: 100px;
-  background: #282c34;
+  bottom: 20px; /* Ajusta la distancia desde el borde inferior */
+  right: 20px; /* Ajusta la distancia desde el borde derecho */
+  width: 200px;
+  height: 200px;
+  background: rgba(40, 44, 52, 0.9);
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  overflow: hidden;
-  transition: all 0.3s ease;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.7), 0 0 60px rgba(0, 255, 255, 0.5);
+  transform-style: preserve-3d;
+  animation: rotate 20s linear infinite;
+  z-index: 1000;
 }
 
-/* Animación cuando se reproduce el audio */
 .audio-container.playing {
-  background: #1e90ff; /* Color de fondo cuando está reproduciendo */
-  transform: scale(1.2); /* Escalar el contenedor */
+  background: rgba(30, 144, 255, 0.8);
+  transform: scale(1.2) rotateY(0deg);
 }
 
 .audio-container.playing::before {
   content: '';
   position: absolute;
-  width: 120%;
+  width: 100%;
   height: 120%;
   border-radius: 50%;
-  background: rgba(30, 144, 255, 0.5); /* Efecto de brillo azul */
-  animation: pulse 1.5s infinite; /* Animación de pulso */
+  background: rgba(30, 144, 255, 0.5);
+  animation: pulse 1.5s infinite, glow 1.5s infinite;
 }
 
-/* Animación de pulso */
 @keyframes pulse {
   0% {
-      transform: scale(1);
-      opacity: 0.5;
+    transform: scale(1);
+    opacity: 0.6;
   }
   50% {
-      transform: scale(1.5);
-      opacity: 0.2;
+    transform: scale(1.4);
+    opacity: 0.2;
   }
   100% {
-      transform: scale(1);
-      opacity: 0.5;
+    transform: scale(1);
+    opacity: 0.6;
   }
 }
 
-/* Icono de audio */
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 20px rgba(30, 144, 255, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(30, 144, 255, 1);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(30, 144, 255, 0.8);
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  0% {
+    transform: rotate(0deg);
+  }
+}
+
 .audio-icon {
-  font-size: 2rem;
-  color: #fff;
-  transition: transform 0.3s ease;
+  width: 200px;
+  height: 200px;
+  background-image: url('images/anime-girl6.gif'); /* Ruta a la imagen del VTuber */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: background-image 0.3s ease, transform 0.3s ease;
+  border-radius: 50%;
+  animation: bounce 1s infinite;
 }
 
-/* Animación cuando el audio se detiene */
-.audio-container.stopped {
-  background: #282c34; /* Color de fondo cuando no está reproduciendo */
-  transform: scale(1); /* Normalizar escala */
+.audio-container.playing .audio-icon {
+  background-image: url('images/anime-girl7.gif'); /* Imagen cuando el VTuber está hablando */
 }
 
-.audio-container.stopped .audio-icon {
-  transform: rotate(0deg); /* Icono en reposo */
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  50% {
+    transform: translateY(0);
+  }
 }
 
-/* Icono de reproducción */
-.audio-icon::before {
-  content: '▶'; /* Icono de reproducción */
-}
-
-.audio-container.playing .audio-icon::before {
-  content: '⏸'; /* Icono de pausa */
-}
 
 /* Tacho de basura */
 .tacho {
@@ -186,7 +213,7 @@ body {
   height: 300px;
   border-radius: 15px;
   background: #141414;
-  margin: 0 auto 30px;
+  margin: 0 auto 5px;
   box-shadow: inset 0 0 40px rgba(0, 255, 255, 0.3), 0 0 40px rgba(0, 255, 255, 0.5);
  transform: rotateX(5deg); 
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -194,6 +221,10 @@ body {
   overflow: hidden; /* Para que el contenido no se desborde */
 }
 
+#h2e{
+  margin-bottom: 2px;
+  margin-top: 2px;
+}
 /* Animación cuando el tacho se activa con hover */
 .tacho:hover {
   transform: scale(1.1) rotateX(180deg) rotate(5deg);
