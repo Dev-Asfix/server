@@ -1,47 +1,212 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tacho Inteligente - Avanzado</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <div class="container">
-    <h1>Monitoreo del Tacho</h1>
-    <div class="tacho">
-      <div id="nivel" class="nivel"></div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tacho Inteligente - Avanzado</title>
+    <link rel="stylesheet" href="styleS.css">
+  </head>
+  <body>
+    
+    
+    <div class="container-principal">
+      <div class="left-section">
+        <!-- Contenido de la sección izquierda -->
+        <h2 id="h2e">Monitoreo del Tacho</h2>
+        <div class="content">
+          <!-- Tacho a la izquierda -->
+          <div class="tacho">
+            <div id="nivel" class="nivel"></div>
+          </div>
+    
+          <!-- Info a la derecha -->
+          <div class="info">
+            <p id="estado">Estado: --</p>
+            <p id="distancia">Distancia: -- cm</p>
+            <p id="fecha">Fecha y Hora: --</p>
+            <p id="alerta" class="alerta"></p>
+          </div>
+        </div>
+    
+        <div class="audio-container" id="audioContainer">
+          <div class="audio-icon"></div>
+          <audio id="audioPlayer" controls></audio>
+        </div>
+      </div>
+    
+      <!-- Sección Derecha -->
+      <div class="right-section">
+       
+        <div class="guardar">
+          <button id="guardadito">ML</button>
+          <div id="recommendations">
+            <div class="analysis">
+              <h2>Recomendaciones</h2>  
+              <p id="mensajeRecomendacion">Esperando datos...</p>
+            </div>
+          </div>
+          <div id="recommendations">
+            <div class="analysis">
+              
+                
+                  <h2>Predicciones</h2>
+                  <p id="prediccionLlenado">Esperando datos...</p>
+                    <div id="waterEffect"></div>
+                    <div class="sparks" id="sparksEffect"></div>
+                
+              
+            </div>
+          </div>
+        </div>
+        <div class="analysis">
+          <p id="averageFillTime">Promedio: -- segundos</p>
+        </div>
+    
+        <!-- Tabla -->
+        <div class="table-section">
+          <h2>Duración de los estados</h2>
+          <div class="tablita">
+            <table>
+              <thead>
+                <tr>
+                  <th>Estado</th>
+                  <th>Fecha</th>
+                  <th>Duración</th>
+                </tr>
+              </thead>
+              <tbody id="estadoTable"></tbody>
+            </table>
+          </div>
+          
+        </div>
+      </div>
     </div>
-    <div class="info">
-      <p id="estado">Estado: --</p>
-      <p id="distancia">Distancia: -- cm</p>
-      <p id="fecha">Fecha y Hora: --</p>
-      <p id="alerta" class="alerta"></p>
-    </div>
-    <div class="analysis">
-      <h2>Tiempo promedio de llenado</h2>
-      <p id="averageFillTime">Promedio: -- segundos</p>
-      <p id="prediccionLlenado">Predicción de llenado: --</p>
-      <p id="mensajeRecomendacion">Recomendación: --</p>
-    </div>
-    <h2>Duración de los estados</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Estado</th>
-          <th>Fecha</th>
-          <th>Duración</th>
-        </tr>
-      </thead>
-      <tbody id="estadoTable"></tbody>
-    </table>
-  </div>
+    
 
   <script>
     const ws = new WebSocket('ws://localhost:3000');
+        // Conexión WebSocket al servidor
+        const socket = new WebSocket('ws://localhost:3000');
     let estadoActual = '';
     let inicioEstado;
     let tiemposEstados = [];
+    let audioIndex = 0;
+    let audioPlaying = false;
+
+    const audios = [
+    'audios/audio1.mp3',
+'audios/audio2.mp3',
+'audios/audio3.mp3',
+'audios/audio4.mp3',
+'audios/audio5.mp3',
+'audios/audio6.mp3',
+'audios/audio7.mp3',
+'audios/audio8.mp3',
+'audios/audio9.mp3',
+'audios/audio10.mp3',
+'audios/audio11.mp3',
+'audios/audio12.mp3',
+'audios/audio13.mp3',
+'audios/audio14.mp3',
+'audios/audio15.mp3',
+'audios/audio16.mp3',
+'audios/audio17.mp3',
+'audios/audio18.mp3',
+'audios/audio19.mp3',
+'audios/audio20.mp3',
+'audios/audio21.mp3',
+'audios/audio22.mp3',
+'audios/audio23.mp3',
+'audios/audio24.mp3',
+'audios/audio25.mp3',
+'audios/audio26.mp3',
+'audios/audio27.mp3',
+'audios/audio28.mp3'
+        ];
+
+    // Evento cuando se recibe un mensaje del WebSocket
+    socket.onmessage = function(event) {
+      const data = JSON.parse(event.data);
+
+      const prediccionElement = document.getElementById('prediccionLlenado');
+      const waterEffect = document.getElementById('waterEffect');
+      const sparksEffect = document.getElementById('sparksEffect');
+     
+      // Si se recibe una predicción de tiempo de llenado, actualizar el texto y detener animación
+      if (data.predictedFillTime) {
+        applyNoBackgroundStyle();
+        const predictedTimeSeconds = (data.predictedFillTime / 1000).toFixed(2); // Convertir a segundos
+        prediccionElement.textContent = `Tiempo estimado para llenarse: ${predictedTimeSeconds} segundos`;
+        waterEffect.classList.remove('filling'); // Detener animación de agua
+        sparksEffect.innerHTML = ''; // Eliminar chispas
+      } else {
+        applyBackgroundStyle();
+        prediccionElement.textContent = `Alimentando redes neuronales...`;
+        waterEffect.classList.add('filling'); // Activar animación de agua
+        generateSparks(); // Generar chispas
+      }
+    };
+    
+    const prediccionElement = document.getElementById('prediccionLlenado');
+// Función para aplicar el estilo con fondo
+function applyBackgroundStyle() {
+  prediccionElement.classList.add('with-background');
+  prediccionElement.classList.remove('no-background');
+  prediccionElement.classList.add('flickering'); // Activar animación de parpadeo
+}
+
+// Función para aplicar el estilo sin fondo
+function applyNoBackgroundStyle() {
+  prediccionElement.classList.add('no-background');
+  prediccionElement.classList.remove('with-background');
+  prediccionElement.classList.remove('flickering'); // Desactivar animación de parpadeo
+}
+
+    // Función para generar chispas
+    function generateSparks() {
+      const sparksEffect = document.getElementById('sparksEffect');
+      sparksEffect.innerHTML = ''; // Limpiar chispas existentes
+      for (let i = 0; i < 100; i++) {
+        const spark = document.createElement('div');
+        spark.classList.add('spark');
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        const animationDelay = Math.random() * 2;
+        const size = Math.random() * 5 + 2;
+        spark.style.left = `${x}%`;
+        spark.style.top = `${y}%`;
+        spark.style.width = `${size}px`;
+        spark.style.height = `${size}px`;
+        spark.style.animationDelay = `-${animationDelay}s`;
+        sparksEffect.appendChild(spark);
+      }
+    }
+
+    // Evento para manejar errores en la conexión
+    socket.onerror = function(error) {
+      console.error('WebSocket Error: ', error);
+    };
+
+    // Evento cuando el WebSocket se cierra
+    socket.onclose = function() {
+      console.log('Conexión WebSocket cerrada');
+    };
+
+    function activateStyles() {
+  element.style.color = '#00ffcc';
+  element.style.textShadow = '0px 0px 10px #00ffcc';
+  element.style.background = 'rgba(0, 255, 255, 0.2)';
+}
+
+// Desactivar estilos
+function deactivateStyles() {
+  element.style.color = '';
+  element.style.textShadow = '';
+  element.style.background = '';
+}
+
+
+
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
@@ -57,8 +222,15 @@
       actualizarTacho(data.estado);
       registrarEstado(data.estado, data.timestamp);
       calcularPromedioLlenado();
-      hacerPrediccionLlenado(data.estado, data.distancia);
+      
       mostrarRecomendacion(data.averageFillTime);
+
+      // Reproducir o detener audio si el estado es "Lleno"
+      if (data.estado === 'Lleno' && !audioPlaying) {
+                reproducirAudiosSecuenciales();
+            } else if (data.estado !== 'Lleno' && audioPlaying) {
+                detenerAudio();
+            }
     };
 
     function actualizarTacho(estado) {
@@ -109,33 +281,6 @@
       document.getElementById('averageFillTime').innerText = `Promedio: ${promedio.toFixed(2)} segundos`;
     }
 
-    function hacerPrediccionLlenado(estado, distancia) {
-      let mensaje = '';
-      switch (estado) {
-        case 'Vacio':
-          mensaje = 'El tacho está vacío. Asegúrate de llenarlo pronto.';
-          break;
-        case 'Bajo':
-          mensaje = 'El tacho está bajo. Requiere llenado pronto.';
-          break;
-        case 'Medio':
-          mensaje = 'El tacho está medio lleno. Mantén el control.';
-          break;
-        case 'Alto':
-          mensaje = 'El tacho está casi lleno. Revisa pronto.';
-          break;
-        case 'Lleno':
-          mensaje = 'El tacho está lleno. Debe vaciarse.';
-          break;
-      }
-      
-      const tiempoLlenado = calcularTiempoLlenado(distancia);
-      if (tiempoLlenado) {
-        mensaje += ` Tiempo estimado para llenarse: ${tiempoLlenado} segundos.`;
-      }
-
-      document.getElementById('prediccionLlenado').innerText = mensaje;
-    }
 
     function calcularTiempoLlenado(distancia) {
       const umbral = 3; // Distancia mínima para considerarlo lleno
@@ -151,21 +296,42 @@
       if (!isNaN(promedioNum)) {
         if (promedioNum < 10) {
           mensaje = getRandomRecommendation([
-            '¡El tacho se llena rápidamente! Considera programar vaciados más frecuentes.',
-            'El tiempo de llenado es corto. Mantén una vigilancia constante.',
-            '¡Atención! El tacho se llena en poco tiempo. Planifica con anticipación.'
+          'El tiempo de llenado es moderado. Ajusta la planificación si es necesario.',
+  'El tiempo de llenado es aceptable. Considera un monitoreo periódico.',
+  'El llenado es estable. Mantén el sistema bajo observación.',
+  'El tacho se está llenando rápidamente. Planifica vaciados frecuentes.',
+  'El tiempo de llenado es corto. Vigílalo de cerca.',
+  'El tacho se llena lentamente. Revisa que todo funcione bien.',
+  'El llenado es prolongado. Considera revisar el sistema.',
+  'El tacho se llena en poco tiempo. Ajusta los tiempos de vigilancia.',
+  'El llenado parece más lento de lo normal. Revisa el proceso.',
+  'El llenado es estable. Mantén una observación periódica.'
           ]);
         } else if (promedioNum < 20) {
           mensaje = getRandomRecommendation([
-            'El tacho tiene un tiempo de llenado moderado. Ajusta tu planificación según sea necesario.',
-            'Tiempo de llenado aceptable. Considera el monitoreo periódico.',
-            'El llenado es estable. Mantén el sistema bajo observación.'
+          'El tiempo de llenado es moderado. Ajusta la planificación si es necesario.',
+    'El tiempo de llenado es aceptable. Considera un monitoreo periódico.',
+    'El llenado es estable. Mantén el sistema bajo observación.',
+    'El tacho se está llenando rápidamente. Planifica vaciados frecuentes.',
+    'El tiempo de llenado es corto. Vigílalo de cerca.',
+    'El tacho se llena lentamente. Revisa que todo funcione bien.',
+    'El llenado es prolongado. Considera revisar el sistema.',
+    'El tacho se llena en poco tiempo. Ajusta los tiempos de vigilancia.',
+    'El llenado parece más lento de lo normal. Revisa el proceso.',
+    'El llenado es estable. Mantén una observación periódica.'
           ]);
         } else {
           mensaje = getRandomRecommendation([
-            'El tiempo de llenado es largo. Podría ser una buena idea revisar el proceso de llenado.',
-            '¡El tacho se llena lentamente! Revisa si hay algún problema en el sistema.',
-            'Tiempo de llenado prolongado. Evalúa si es necesario ajustar el mantenimiento.'
+          'El tiempo de llenado es moderado. Ajusta la planificación si es necesario.',
+    'El tiempo de llenado es aceptable. Considera un monitoreo periódico.',
+    'El llenado es estable. Mantén el sistema bajo observación.',
+    'El tacho se está llenando rápidamente. Planifica vaciados frecuentes.',
+    'El tiempo de llenado es corto. Vigílalo de cerca.',
+    'El tacho se llena lentamente. Revisa que todo funcione bien.',
+    'El llenado es prolongado. Considera revisar el sistema.',
+    'El tacho se llena en poco tiempo. Ajusta los tiempos de vigilancia.',
+    'El llenado parece más lento de lo normal. Revisa el proceso.',
+    'El llenado es estable. Mantén una observación periódica.'
           ]);
         }
       } else {
@@ -179,6 +345,79 @@
       const index = Math.floor(Math.random() * recommendations.length);
       return recommendations[index];
     }
+
+    // Función para reproducir audios secuenciales mientras el estado es "Lleno"
+
+    function reproducirAudiosSecuenciales() {
+    const audioPlayer = document.getElementById('audioPlayer');
+    const audioContainer = document.getElementById('audioContainer');
+
+    // Solo reproducir el audio si no está ya reproduciéndose
+    if (!audioPlaying) {
+        audioPlaying = true;
+
+        // Seleccionar un audio aleatorio al inicio
+        audioIndex = Math.floor(Math.random() * audios.length); // Aleatorio al iniciar
+
+        audioPlayer.src = audios[audioIndex];
+        audioPlayer.play();
+        audioContainer.classList.add('playing');
+
+        audioPlayer.onended = () => {
+            // Cuando termina el audio, verificar si el estado sigue siendo 'Lleno'
+            if (estadoActual === 'Lleno') {
+                // Seleccionar otro audio aleatorio
+                audioIndex = (audioIndex + 1) % audios.length; // Aleatorio cada vez
+
+                audioPlayer.src = audios[audioIndex];
+                audioPlayer.play();
+            } else {
+                detenerAudio(); // Detener si el estado cambia
+            }
+        };
+
+        audioPlayer.onerror = () => {
+            console.error("Error al reproducir el audio.");
+            detenerAudio();
+        };
+    }
+}
+
+// Función para detener el audio si el estado cambia
+function detenerAudio() {
+    const audioPlayer = document.getElementById('audioPlayer');
+    const audioContainer = document.getElementById('audioContainer');
+    audioPlayer.pause();
+    audioPlayer.currentTime = 0; // Reiniciar el tiempo del audio
+    audioPlaying = false;
+    audioContainer.classList.remove('playing');
+    audioContainer.classList.add('stopped');
+}
+
+// Función que verifica el estado del sensor
+function verificarEstadoDelSensor() {
+    if (sensorDetectaLleno()) {
+        if (estadoActual !== 'Lleno') {
+            estadoActual = 'Lleno';
+            reproducirAudiosSecuenciales(); // Reproduce el audio solo cuando cambia a "Lleno"
+        }
+    } else {
+        if (estadoActual === 'Lleno') {
+            estadoActual = 'Vacio'; // O cualquier otro estado que definas
+            detenerAudio(); // Detener el audio si ya no está "Lleno"
+        }
+    }
+}
+
+// Simular función de detección del sensor
+function sensorDetectaLleno() {
+    // Aquí va tu lógica para detectar si el tacho está lleno
+    // Deberías retornar true si el sensor detecta que está en el rango de lleno
+    return Math.random() > 0.5; // Simulación (50% de probabilidad de estar lleno)
+}
+
+
+
   </script>
 </body>
 </html>
