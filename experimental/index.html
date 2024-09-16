@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tacho Inteligente - Avanzado</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styleS.css">
   </head>
   <body>
     
@@ -41,14 +41,20 @@
           <button id="guardadito">ML</button>
           <div id="recommendations">
             <div class="analysis">
-              <h2>Recomendaciones</h2>
+              <h2>Recomendaciones</h2>  
               <p id="mensajeRecomendacion">Esperando datos...</p>
             </div>
           </div>
-          <div id="predictions">
+          <div id="recommendations">
             <div class="analysis">
-              <h2>Predicciones</h2>
-              <p id="prediccionLlenado">Esperando datos...</p>
+              
+                
+                  <h2>Predicciones</h2>
+                  <p id="prediccionLlenado">Esperando datos...</p>
+                    <div id="waterEffect"></div>
+                    <div class="sparks" id="sparksEffect"></div>
+                
+              
             </div>
           </div>
         </div>
@@ -79,6 +85,8 @@
 
   <script>
     const ws = new WebSocket('ws://localhost:3000');
+        // Conexión WebSocket al servidor
+        const socket = new WebSocket('ws://localhost:3000');
     let estadoActual = '';
     let inicioEstado;
     let tiemposEstados = [];
@@ -116,6 +124,90 @@
 'audios/audio28.mp3'
         ];
 
+    // Evento cuando se recibe un mensaje del WebSocket
+    socket.onmessage = function(event) {
+      const data = JSON.parse(event.data);
+
+      const prediccionElement = document.getElementById('prediccionLlenado');
+      const waterEffect = document.getElementById('waterEffect');
+      const sparksEffect = document.getElementById('sparksEffect');
+     
+      // Si se recibe una predicción de tiempo de llenado, actualizar el texto y detener animación
+      if (data.predictedFillTime) {
+        applyNoBackgroundStyle();
+        const predictedTimeSeconds = (data.predictedFillTime / 1000).toFixed(2); // Convertir a segundos
+        prediccionElement.textContent = `Tiempo estimado para llenarse: ${predictedTimeSeconds} segundos`;
+        waterEffect.classList.remove('filling'); // Detener animación de agua
+        sparksEffect.innerHTML = ''; // Eliminar chispas
+      } else {
+        applyBackgroundStyle();
+        prediccionElement.textContent = `Alimentando redes neuronales...`;
+        waterEffect.classList.add('filling'); // Activar animación de agua
+        generateSparks(); // Generar chispas
+      }
+    };
+    
+    const prediccionElement = document.getElementById('prediccionLlenado');
+// Función para aplicar el estilo con fondo
+function applyBackgroundStyle() {
+  prediccionElement.classList.add('with-background');
+  prediccionElement.classList.remove('no-background');
+  prediccionElement.classList.add('flickering'); // Activar animación de parpadeo
+}
+
+// Función para aplicar el estilo sin fondo
+function applyNoBackgroundStyle() {
+  prediccionElement.classList.add('no-background');
+  prediccionElement.classList.remove('with-background');
+  prediccionElement.classList.remove('flickering'); // Desactivar animación de parpadeo
+}
+
+    // Función para generar chispas
+    function generateSparks() {
+      const sparksEffect = document.getElementById('sparksEffect');
+      sparksEffect.innerHTML = ''; // Limpiar chispas existentes
+      for (let i = 0; i < 100; i++) {
+        const spark = document.createElement('div');
+        spark.classList.add('spark');
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        const animationDelay = Math.random() * 2;
+        const size = Math.random() * 5 + 2;
+        spark.style.left = `${x}%`;
+        spark.style.top = `${y}%`;
+        spark.style.width = `${size}px`;
+        spark.style.height = `${size}px`;
+        spark.style.animationDelay = `-${animationDelay}s`;
+        sparksEffect.appendChild(spark);
+      }
+    }
+
+    // Evento para manejar errores en la conexión
+    socket.onerror = function(error) {
+      console.error('WebSocket Error: ', error);
+    };
+
+    // Evento cuando el WebSocket se cierra
+    socket.onclose = function() {
+      console.log('Conexión WebSocket cerrada');
+    };
+
+    function activateStyles() {
+  element.style.color = '#00ffcc';
+  element.style.textShadow = '0px 0px 10px #00ffcc';
+  element.style.background = 'rgba(0, 255, 255, 0.2)';
+}
+
+// Desactivar estilos
+function deactivateStyles() {
+  element.style.color = '';
+  element.style.textShadow = '';
+  element.style.background = '';
+}
+
+
+
+
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       document.getElementById('estado').innerText = `Estado: ${data.estado}`;
@@ -130,7 +222,7 @@
       actualizarTacho(data.estado);
       registrarEstado(data.estado, data.timestamp);
       calcularPromedioLlenado();
-      hacerPrediccionLlenado(data.estado, data.distancia);
+      
       mostrarRecomendacion(data.averageFillTime);
 
       // Reproducir o detener audio si el estado es "Lleno"
@@ -189,33 +281,6 @@
       document.getElementById('averageFillTime').innerText = `Promedio: ${promedio.toFixed(2)} segundos`;
     }
 
-    function hacerPrediccionLlenado(estado, distancia) {
-      let mensaje = '';
-      switch (estado) {
-        case 'Vacio':
-          mensaje = 'El tacho está vacío. Asegúrate de llenarlo pronto.';
-          break;
-        case 'Bajo':
-          mensaje = 'El tacho está bajo. Requiere llenado pronto.';
-          break;
-        case 'Medio':
-          mensaje = 'El tacho está medio lleno. Mantén el control.';
-          break;
-        case 'Alto':
-          mensaje = 'El tacho está casi lleno. Revisa pronto.';
-          break;
-        case 'Lleno':
-          mensaje = 'El tacho está lleno. Debe vaciarse.';
-          break;
-      }
-      
-      const tiempoLlenado = calcularTiempoLlenado(distancia);
-      if (tiempoLlenado) {
-        mensaje += ` Tiempo estimado para llenarse: ${tiempoLlenado} segundos.`;
-      }
-
-      document.getElementById('prediccionLlenado').innerText = mensaje;
-    }
 
     function calcularTiempoLlenado(distancia) {
       const umbral = 3; // Distancia mínima para considerarlo lleno

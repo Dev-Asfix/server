@@ -587,6 +587,139 @@ body {
 
 
 
+.prediccions {
+  position: relative;
+  width: 300px;
+  height: 200px;
+  margin: 20px auto;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 2px solid #00ffcc;
+  text-align: center;
+}
+
+/* Estilo base */
+#prediccionLlenado {
+  font-size: 24px;
+  color: #00ffcc;
+  position: relative;
+  font-weight: bold;
+  margin-top: 20px;
+  text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc, 0 0 40px #00ffcc, 0 0 50px #00ffcc, 0 0 60px #00ffcc, 0 0 70px #00ffcc;
+  transition: background 0.5s ease-in-out, text-shadow 0.5s ease-in-out, transform 0.5s ease-in-out; /* Transiciones suaves */
+}
+
+/* Estilo con fondo */
+#prediccionLlenado.with-background {
+  background: rgba(255, 69, 0, 0.2); /* Fondo naranja con opacidad */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 0 15px rgba(255, 69, 0, 0.8); /* Sombra de fuego */
+  text-shadow: 0 0 20px #ff4500, 0 0 30px #ff4500, 0 0 40px #ff4500, 0 0 50px #ff4500, 0 0 60px #ff4500; /* Efecto de fuego */
+  transform: scale(1.05); /* Ligeramente más grande para el efecto de calor */
+}
+
+/* Estilo sin fondo */
+/* Estilo sin fondo con efectos sutiles */
+#prediccionLlenado.no-background {
+  font-size: 24px;
+  color: #ffffff; /* Texto blanco */
+  position: relative;
+  font-weight: bold;
+  margin-top: 20px;
+  text-shadow: 0 0 10px rgba(68, 255, 239, 0.448), 0 0 20px rgba(255, 255, 255, 0.3); /* Efecto de fuego sutil */
+  transition: background 0.3s, text-shadow 0.3s, transform 0.3s; /* Transiciones suaves */
+}
+
+
+/* Animación de parpadeo para efecto de fuego */
+@keyframes fire {
+  0% { text-shadow: 0 0 10px #ff4500, 0 0 20px #ff4500, 0 0 30px #ff4500; }
+  50% { text-shadow: 0 0 30px #ff4500, 0 0 50px #ff4500, 0 0 70px #ff4500; }
+  100% { text-shadow: 0 0 10px #ff4500, 0 0 20px #ff4500, 0 0 30px #ff4500; }
+}
+
+#prediccionLlenado.flickering {
+  animation: fire 30s infinite alternate; /* Efecto de parpadeo */
+}
+
+
+
+
+/* Estilos para el efecto de agua */
+.water {
+  position: absolute;
+  bottom: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 255, 255, 0.2);
+  border-radius: 20px;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Efecto de burbujas y ondas */
+.water:before, .water:after {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -75%;
+  left: -50%;
+  background: rgba(0, 255, 255, 0.3);
+  border-radius: 45%;
+  animation: wave 6s infinite linear;
+  opacity: 0.7;
+}
+
+.water:after {
+  animation-delay: -3s;
+}
+
+/* Efecto de remolino */
+@keyframes wave {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Efecto de chispas */
+.sparks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.spark {
+  position: absolute;
+  width: 10px;
+  height: 8px;
+  background: #00ffcc;
+  border-radius: 50%;
+  opacity: 0;
+  animation: spark-animation 2s infinite;
+}
+
+@keyframes spark-animation {
+  0% {
+    transform: translateY(-100px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+}
+
+
+
   
   /* Adaptación para móviles */
   @media only screen and (max-width: 768px) {
